@@ -11,6 +11,10 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <depend>examples_rclcpp_minimal_publisher</depend>
+  <depend>examples_rclcpp_minimal_subscriber</depend>
+  <depend>examples_rclcpp_minimal_action_server</depend>
+  <depend>examples_rclcpp_minimal_action_client</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
