@@ -5,11 +5,49 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
+# Default to C++20
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+endif()
+
+# Find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(builtin_interfaces REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(rosidl_default_runtime REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+
+set(msg_files
+  "msg/StringStamped.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
+  DEPENDENCIES builtin_interfaces std_msgs
+)
+ament_export_dependencies(rosidl_default_runtime)
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+
+
+# Include directories
+include_directories(include)
+
+# Publisher Node executable
+add_executable(transient_local_publisher src/transient_local_publisher.cpp)
+target_link_libraries(transient_local_publisher
+  "${cpp_typesupport_target}"
+  ${std_msgs_TARGETS}
+  rclcpp::rclcpp
+)
+
+# Subscriber Node executable
+add_executable(transient_local_subscriber src/transient_local_subscriber.cpp)
+target_link_libraries(transient_local_subscriber
+  "${cpp_typesupport_target}"
+  ${std_msgs_TARGETS}
+  rclcpp::rclcpp
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -23,13 +61,16 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-# Install Python modules
-ament_python_install_package(${PROJECT_NAME})
-
 # Install launch files
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/
+)
+
+install(TARGETS
+  transient_local_publisher
+  transient_local_subscriber
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

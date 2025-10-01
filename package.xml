@@ -15,9 +15,14 @@
   <depend>examples_rclcpp_minimal_subscriber</depend>
   <depend>examples_rclcpp_minimal_action_server</depend>
   <depend>examples_rclcpp_minimal_action_client</depend>
+  <depend>builtin_interfaces</depend>
+  <depend>rosidl_default_generators</depend>
+  <depend>rosidl_default_runtime</depend>
+  <depend>std_msgs</depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
     <build_type>ament_cmake</build_type>
   </export>
 </package>
-<!-- This package was generated using the Turtle Nest ROS 2 package creator -->
